@@ -1,4 +1,4 @@
-import gui.Gui;
+import snake.*;
 
 /**
  * Created by kiril on 14.03.2017.
@@ -6,6 +6,6 @@ import gui.Gui;
 
 public class Driver {
     public static void main(String args[]) {
-        Gui gui = Gui.getInstance(600, 600);
+        Snake snake = new Snake();
     }
 }

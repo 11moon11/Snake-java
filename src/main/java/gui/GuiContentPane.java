@@ -1,54 +1,69 @@
 package gui;
 
+import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
 
 /**
  * Created by kiril on 14.03.2017.
  */
-public class GuiContentPane extends JPanel {
-    private Graphics graph;
-
-    String[] type = { "Serif","SansSerif"};
-    int[] styles = { Font.PLAIN, Font.ITALIC, Font.BOLD, Font.ITALIC + Font.BOLD };
-    String[] stylenames = { "Plain", "Italic", "Bold", "Bold & Italic" };
-
-    /*
-    public void paint(Graphics g) {
-        graph = g;
-        for (int f = 0; f < type.length; f++) {
-            for (int s = 0; s < styles.length; s++) {
-                Font font = new Font(type[f], styles[s], 18);
-                g.setFont(font);
-                String name = type[f] + " " + stylenames[s];
-                g.drawString(name, 20, (f * 4 + s + 1) * 20);
-            }
-        }
-    }
-    */
-
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        drawTiles(g);
-    }
-
-    private void drawTiles(Graphics g) {
-        int tile = 40;
-        int width = super.getWidth();
-        int height = super.getHeight();
-
-        int sizeX = width / tile;
-        int sizeY = height / tile;
-
-        g.setColor(Color.RED);
-        for(int x=0; x<sizeX; x++) {
-            for(int y=0; y<sizeY; y++) {
-                g.drawRect(x * tile, y * tile, tile, tile);
-            }
-        }
-    }
+public class GuiContentPane extends JPanel implements MouseListener, KeyListener {
+    private Drawable plane;
 
     public GuiContentPane() {
+        super();
+
         setBorder(BorderFactory.createLineBorder(Color.black));
+        plane = new DrawableStub();
+        addMouseListener(this);
+        addKeyListener(this);
     }
+
+    public void paint(Graphics g) {
+        int height = getSize().height;
+        int width = getSize().width;
+
+        // Double buffering
+        Image imageBuffer = createImage(width, height);
+        Graphics gIB = imageBuffer.getGraphics();
+
+        gIB.setColor(Color.white);
+        gIB.fillRect(0, 0, width, height);
+
+        if(plane != null)
+            plane.draw(gIB, width, height);
+
+        // copy the imageBuffer to the plane
+        g.drawImage(imageBuffer, 0, 0, null);
+        requestFocus();
+    }
+
+    public void setDrawable(Drawable drawable) {
+        if (drawable != null)
+            plane = drawable;
+    }
+
+    public void mousePressed (MouseEvent event) {
+        repaint();
+
+        if (plane != null)
+            plane.mouseClicked(event.getX(), event.getY());
+
+        repaint();
+        requestFocus();  //needed to get the key presses to work
+    }
+
+    public void keyTyped(KeyEvent ke) {
+        char key = ke.getKeyChar();
+
+        if (plane != null)
+            plane.keyPressed(key);
+    }
+
+    public void mouseClicked (MouseEvent event){}
+    public void mouseReleased (MouseEvent event){}
+    public void mouseEntered (MouseEvent event){}
+    public void mouseExited (MouseEvent event){}
+    public void keyPressed(KeyEvent ke){}
+    public void keyReleased(KeyEvent ke){}
 }
