@@ -23,6 +23,9 @@ public class GuiContentPane extends JPanel implements MouseListener, KeyListener
         int height = getSize().height;
         int width = getSize().width;
 
+        if(width == 0 || height == 0)
+            return;
+
         // Double buffering
         Image imageBuffer = createImage(width, height);
         Graphics gIB = imageBuffer.getGraphics();
@@ -44,20 +47,30 @@ public class GuiContentPane extends JPanel implements MouseListener, KeyListener
     }
 
     public void mousePressed (MouseEvent event) {
-        repaint();
+        //repaint();
 
         if (plane != null)
             plane.mouseClicked(event.getX(), event.getY());
 
-        repaint();
+        //repaint();
         requestFocus();  //needed to get the key presses to work
     }
 
     public void keyTyped(KeyEvent ke) {
+        //repaint();
+
         char key = ke.getKeyChar();
 
         if (plane != null)
             plane.keyPressed(key);
+
+        //repaint();
+    }
+
+    public void updateFrame() {
+        repaint();
+        paint(getGraphics());
+        repaint();
     }
 
     public void mouseClicked (MouseEvent event){}

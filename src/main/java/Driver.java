@@ -6,6 +6,6 @@ import snake.*;
 
 public class Driver {
     public static void main(String args[]) {
-        Snake snake = new Snake();
+        Game game = new Game();
     }
 }

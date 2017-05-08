@@ -1,13 +1,15 @@
-package gui; /**
- * Created by kiril on 14.03.2017.
- */
+package gui;
 
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
+import java.awt.event.*;
 
+/**
+ * Created by kiril on 14.03.2017.
+ */
 public class Gui {
     private static Gui instance = null;
+    private static GuiContentPane pane;
 
     private Gui(int width, int height, String title, Drawable d) {
         System.out.println("gui.Gui is initializing...");
@@ -18,12 +20,18 @@ public class Gui {
                 System.exit(0);
             }
         });
-        GuiContentPane pane = new GuiContentPane();
+        pane = new GuiContentPane();
         pane.setDrawable(d);
 
-        window.setContentPane(pane);
-        window.setSize(width, height);
+
         window.setVisible(true);
+        window.setResizable(false);
+        window.setSize(width, height);
+        window.add(pane, BorderLayout.CENTER);
+    }
+
+    public void updateFrame() {
+        pane.updateFrame();
     }
 
     public static Gui getInstance(int w, int h, String title, Drawable d) {
